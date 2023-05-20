@@ -45,10 +45,6 @@ window.addEventListener('DOMContentLoaded', () =>{
     // Timer
 
     const deadLine = '2023-05-29';
-    let timerDay = document.querySelector('#days'),
-    timerHour = document.querySelector('#hours'),
-        timerMinute = document.querySelector('#minutes'),
-        timerSecond = document.querySelector('#seconds');
 
         function getTimeRemaining(endTime) {
             let days, hours, minutes, seconds;
@@ -87,21 +83,67 @@ window.addEventListener('DOMContentLoaded', () =>{
 
             function updateClock(){
                 const t = getTimeRemaining(endTime)
-
                 days.textContent = getZero(t.days);
                 hours.textContent = getZero(t.hours);
                 minutes.textContent = getZero(t.minutes);
                 secunds.textContent = getZero(t.seconds);
-
                 if(t.total <= 0) {
                     clearInterval(timeInterval)
                 }
-
             }
             updateClock();
-
     }
 
     setClock('.timer', deadLine);
 
-} );
+    // Modal
+
+    const btnsShowModal = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        btnHideModal = modal.querySelector('.modal__close');
+
+    // console.log(modal);
+    function showModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(idtimerShowModel);
+    }
+
+    function hideModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = ''
+    }
+
+    btnsShowModal.forEach(e => {
+        e.addEventListener('click', showModal);
+    })
+
+    btnHideModal.addEventListener('click', hideModal);
+
+    document.addEventListener('click', (e) => {
+        if(e.target === modal && modal.classList.contains('show')) {
+            hideModal();
+        }
+    }
+    )
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key == 'Escape' && modal.classList.contains('show')) {
+            hideModal();
+        }
+    });
+
+    const idtimerShowModel = setTimeout(showModal, 5_000);
+
+    function showModelByScroll() {
+        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+            showModal();
+            window.removeEventListener('scroll', showModelByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModelByScroll);
+});
+
